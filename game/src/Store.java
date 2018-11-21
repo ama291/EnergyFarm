@@ -10,17 +10,17 @@ public class Store {
     public ArrayList<Equipment> getInventory() { return inventory; }
 
     public double generatePrice() {
-        //need to actually calculate
+        //TODO actually calculate
         return 1;
     }
 
     public double generateEfficiency() {
-        //need to actually calculate
+        //TODO actually calculate
         return 1;
     }
 
     public void generateInventory() {
-        //need to do this for all types of equipment
+        //TODO do this for all types of equipment
         this.inventory.add(new Equipment("Windmill", generatePrice(), generateEfficiency(), 0));
     }
 }

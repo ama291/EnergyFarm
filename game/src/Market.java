@@ -3,8 +3,12 @@ public class Market {
 
     public double getCurrentPrice() { return currentPrice; }
 
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
     public void calculateCurrentPrice() {
         //need to actually calculate
-        this.currentPrice = 1;
+        setCurrentPrice(1);
     }
 }

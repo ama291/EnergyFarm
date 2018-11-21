@@ -13,6 +13,9 @@ public class Equipment {
 
     public String getName() { return name; }
     public double getPrice() { return price; }
+    public double getProductionLevel() {
+        return productionLevel;
+    }
 
     public double getInstallFee() { return installFee; }
 }

@@ -8,7 +8,7 @@ public class Market {
     }
 
     public void calculateCurrentPrice() {
-        //need to actually calculate
+        //TODO to actually calculate
         setCurrentPrice(1);
     }
 }

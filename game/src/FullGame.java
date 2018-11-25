@@ -20,10 +20,10 @@ public class FullGame extends Game {
     public FullGame(double capital) {
         super("EnergyFarm", 1000, 750);
         time = 0;
-        market = new Market();
+        market = new Market(50);
         market.calculateCurrentPrice();
-        store = new Store();
-        store.generateInventory();
+        store = new Store(50, 50 ,50);
+        store.generateInventory("wind");
         player = new Player(capital);
         this.addChild(storeSprite);
         this.addChild(marketSprite);

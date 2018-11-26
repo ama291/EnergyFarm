@@ -13,7 +13,7 @@ public class FullGame extends Game {
     Store store;
     Player player;
     Sprite character = new Sprite("Character", "player.png");
-    Sprite storeSprite = new Sprite("Store", "store.png");
+    Sprite storeSprite = new Sprite("Store", "store.jpg");
     Sprite marketSprite = new Sprite("Market", "market.png");
 
 
@@ -29,8 +29,8 @@ public class FullGame extends Game {
         this.addChild(marketSprite);
         this.addChild(character);
         character.setPosition(new Point(475, 300));
-        storeSprite.setPosition(new Point(200, 500));
-        marketSprite.setPosition(new Point(700, 200));
+        storeSprite.setPosition(new Point(0, 540));
+        marketSprite.setPosition(new Point(785, 0));
     }
 
     @Override

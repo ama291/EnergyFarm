@@ -40,7 +40,7 @@ public class Store {
     }
 
     public double generateInstallFee(String equipmentType) {
-        // TODO: add installation fee feature 
+        // TODO: add installation fee feature
         return 0;
     }
 

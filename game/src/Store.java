@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.*;
 
 public class Store {
     private ArrayList<Equipment> inventory;
     private double windPrice;
     private double solarPrice;
     private double hydroPrice;
+    private JFrame ui;
+    boolean uiopen = false;
 
     public Store(double windPrice, double solarPrice, double hydroPrice) {
         this.inventory = new ArrayList<Equipment>();
@@ -50,4 +53,5 @@ public class Store {
                 generateEfficiency(equipmentType),
                 generateInstallFee(equipmentType)));
     }
+
 }

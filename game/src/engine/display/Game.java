@@ -44,7 +44,6 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 		this.mainFrame = new JFrame();
 		getMainFrame().setTitle(gameId);
 		getMainFrame().setResizable(false);
-		getMainFrame().setVisible(true);
 		getMainFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getMainFrame().setBounds(0, 0, width, height);
 		getMainFrame().addWindowListener(new WindowAdapter() {
@@ -53,6 +52,8 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 			}
 		});
 		getMainFrame().addKeyListener(this);
+		getMainFrame().setLocationRelativeTo(null);
+		getMainFrame().setVisible(true);
 	}
 
 	/**

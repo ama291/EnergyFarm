@@ -1,3 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Random;
 
 public class Market {
@@ -19,4 +23,5 @@ public class Market {
         double nextPrice = this.currentPrice + (this.currentPrice * returns);
         setCurrentPrice(nextPrice);
     }
+
 }

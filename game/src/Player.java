@@ -33,4 +33,5 @@ public class Player {
         setEnergyStored(getEnergyStored() - amount);
         setCapital(getCapital() + price * amount);
     }
+
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
     private double capital;
@@ -33,5 +34,26 @@ public class Player {
         setEnergyStored(getEnergyStored() - amount);
         setCapital(getCapital() + price * amount);
     }
+
+    public HashMap<String, Integer> getEquipmentCounts() {
+        int wind = 0;
+        int solar = 0;
+        int hydro = 0;
+        for (Equipment i : this.getInventory()) {
+            if (i.getName() == "wind") {
+                wind++;
+            } else if (i.getName() == "solar") {
+                solar++;
+            } else if (i.getName() == "hydro") {
+                hydro++;
+            }
+        }
+        HashMap<String, Integer> count = new HashMap<String, Integer>();
+        count.put("wind", wind);
+        count.put("solar", solar);
+        count.put("hydro", hydro);
+        return count;
+    }
+
 
 }

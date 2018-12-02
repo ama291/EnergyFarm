@@ -28,7 +28,7 @@ public class FullGame extends Game {
         this.gameSpan = gameSpan;
         market = new Market(50);
         market.calculateCurrentPrice();
-        store = new Store(50000, 20000,200000);
+        store = new Store();
         store.generateInventory("wind");
         store.generateInventory("solar");
         store.generateInventory("hydro");

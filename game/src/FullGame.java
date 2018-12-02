@@ -28,7 +28,6 @@ public class FullGame extends Game {
     boolean gameOver = false;
     boolean uiopen = false;
     String currency = "$";
-    int elements = 0;
     String mode;
 
     public FullGame(int gameLevel, double capital, int gameSpan) {
@@ -48,13 +47,12 @@ public class FullGame extends Game {
         this.addChild(storeSprite);
         this.addChild(marketSprite);
         this.addChild(bankSprite);
+        renderFarm();
         this.addChild(character);
         character.setPosition(new Point(460, 400));
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         bankSprite.setPosition(new Point(375, 568));
-        elements = this.getChildren().size();
-        renderFarm();
     }
 
     public void renderFarm() {
@@ -96,14 +94,14 @@ public class FullGame extends Game {
                     this.addChild(image);
                 }
                 else if (i.getName() == "wind") {
-                    Sprite image = new Sprite("wind", "solarpanel.png");
+                    Sprite image = new Sprite("wind", "turbine.png");
                     image.setScaleX(scale / image.getUnscaledWidth());
                     image.setScaleY(scale / image.getUnscaledHeight());
                     image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
                     this.addChild(image);
                 }
                 else if (i.getName() == "hydro") {
-                    Sprite image = new Sprite("hydro", "solarpanel.png");
+                    Sprite image = new Sprite("hydro", "hydro.png");
                     image.setScaleX(scale / image.getUnscaledWidth());
                     image.setScaleY(scale / image.getUnscaledHeight());
                     image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));

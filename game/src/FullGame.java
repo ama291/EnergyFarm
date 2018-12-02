@@ -18,6 +18,7 @@ public class FullGame extends Game {
     Sprite marketSprite = new Sprite("Market", "market.png");
     JFrame ui;
     boolean uiopen = false;
+    String currency = "$";
 
     public FullGame(double capital) {
         super("EnergyFarm", 1000, 750);
@@ -33,6 +34,7 @@ public class FullGame extends Game {
         character.setPosition(new Point(475, 500));
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
+        player.setEnergyStored(1000);
     }
 
     @Override
@@ -156,6 +158,31 @@ public class FullGame extends Game {
             ui.setResizable(false);
             Container contentPane = ui.getContentPane();
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " units");
+            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per unit");
+            JLabel qlabel = new JLabel("Quantity: ");
+            JTextField quantity = new JTextField("1");
+            JButton sell = new JButton("Sell");
+            sell.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int quant = Integer.parseInt(quantity.getText());
+                    if (quant > player.getEnergyStored() || quant < 1) {
+                        JOptionPane.showMessageDialog(null, "Invalid quantity.");
+                    }
+                    else {
+                        player.setEnergyStored(player.getEnergyStored() - quant);
+                        player.setCapital(player.getCapital() + quant*market.getCurrentPrice());
+                        energy.setText("Energy Stored: " + player.getEnergyStored() + " units");
+                    }
+                }
+            });
+
+            contentPane.add(energy);
+            contentPane.add(price);
+            contentPane.add(qlabel);
+            contentPane.add(quantity);
+            contentPane.add(sell);
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
             ui.addWindowListener(new WindowAdapter() {
@@ -166,6 +193,16 @@ public class FullGame extends Game {
                 }
             });
             uiopen = true;
+        }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
+        Graphics2D g2d = (Graphics2D) g;
+        if (player != null) {
+            g2d.drawString("Capital: " + currency + player.getCapital(), 0,10);
+            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " units", 0,25);
         }
     }
 

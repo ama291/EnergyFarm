@@ -28,7 +28,6 @@ public class FullGame extends Game {
     boolean gameOver = false;
     boolean uiopen = false;
     String currency = "$";
-    int elements = 0;
     String mode;
 
     public FullGame(int gameLevel, double capital, int gameSpan) {
@@ -48,19 +47,18 @@ public class FullGame extends Game {
         this.addChild(storeSprite);
         this.addChild(marketSprite);
         this.addChild(bankSprite);
+        renderFarm();
         this.addChild(character);
         character.setPosition(new Point(460, 400));
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         bankSprite.setPosition(new Point(375, 568));
-        elements = this.getChildren().size();
-        renderFarm();
     }
 
     public void renderFarm() {
         int objects = player.getInventory().size();
         if (objects != 0) {
-            Point start = new Point(0, 80);
+            Point start = new Point(0, 100);
             int w = 1000;
             int h = 400;
             //remove previous images
@@ -96,14 +94,14 @@ public class FullGame extends Game {
                     this.addChild(image);
                 }
                 else if (i.getName() == "wind") {
-                    Sprite image = new Sprite("wind", "solarpanel.png");
+                    Sprite image = new Sprite("wind", "turbine.png");
                     image.setScaleX(scale / image.getUnscaledWidth());
                     image.setScaleY(scale / image.getUnscaledHeight());
                     image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
                     this.addChild(image);
                 }
                 else if (i.getName() == "hydro") {
-                    Sprite image = new Sprite("hydro", "solarpanel.png");
+                    Sprite image = new Sprite("hydro", "hydro.png");
                     image.setScaleX(scale / image.getUnscaledWidth());
                     image.setScaleY(scale / image.getUnscaledHeight());
                     image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
@@ -184,9 +182,31 @@ public class FullGame extends Game {
     public void writeHiscore() {
         try {
             File f = new File("./resources/hiscores.txt");
-            BufferedWriter w = new BufferedWriter(new FileWriter(f));
-            String name = JOptionPane.showInputDialog("Please enter your name:");
-            w.write(mode + ":" + name + ":" + player.getCapital());
+            FileWriter w = new FileWriter(f, true);
+            JFrame frame  = new JFrame("Name Input");
+            frame.setSize(500,200);
+            Container contentPane = frame.getContentPane();
+            contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            JLabel question = new JLabel("What is your name?");
+            JTextField name = new JTextField("Player");
+            name.setMaximumSize(new Dimension(300, 30));
+            JButton submit = new JButton("Submit");
+            submit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    try {
+                        w.write(mode + ":" + name.getText() + ":" + String.format("%.2f", player.getCapital()) + "\n");
+                        w.close();
+                        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                    }
+                    catch (Exception e) { return; }
+                }
+            });
+            contentPane.add(question);
+            contentPane.add(name);
+            contentPane.add(submit);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
         }
         catch (Exception e) { return; }
     }

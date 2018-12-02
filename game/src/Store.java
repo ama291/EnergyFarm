@@ -19,6 +19,7 @@ public class Store {
     }
 
     public ArrayList<Equipment> getInventory() { return inventory; }
+    public void clearInventory() { this.inventory = new ArrayList<Equipment>(); }
 
     public double generatePrice(String equipmentType) {
         //TODO actually calculate
@@ -39,7 +40,6 @@ public class Store {
     }
 
     public double generateEfficiency(String equipmentType) {
-        //TODO: make non-constant efficiency
         if (equipmentType == "wind") {
             return 100;
         } else if (equipmentType == "solar") {

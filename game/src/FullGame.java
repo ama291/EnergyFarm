@@ -38,17 +38,15 @@ public class FullGame extends Game {
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         player.setEnergyStored(1000);
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-
-
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
+//        player.getInventory().add(store.getInventory().get(1));
     }
 
     @Override
@@ -134,7 +132,7 @@ public class FullGame extends Game {
                 JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
-                JLabel productionlevel = new JLabel("Production Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
+                JLabel productionlevel = new JLabel("Average Annual Production: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 JTextField quantity = new JTextField("\t");
                 quantity.setMaximumSize(quantity.getPreferredSize());
                 JButton buy = new JButton("Buy");
@@ -237,8 +235,8 @@ public class FullGame extends Game {
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
             ui.add(scrollPane);
             JLabel mark = new JLabel("*** Market ***");
-            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " kJ");
-            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per kJ");
+            JLabel energy = new JLabel("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ");
+            JLabel price = new JLabel("Current Market Price: $" + String.format("%.2f", market.getCurrentPrice()) + " per kJ");
             JTextField quantity = new JTextField("\t");
             quantity.setMaximumSize(quantity.getPreferredSize());
             JButton sell = new JButton("Sell");
@@ -285,9 +283,10 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
-            g2d.drawString("Capital: " + currency + player.getCapital(), 0,10);
-            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " kJ", 0,25);
-            g2d.drawString("Year: " + time, 0,40);
+            g2d.drawString("*** Game Progress ***", 10,15);
+            g2d.drawString("Capital: " + currency + String.format("%.2f", player.getCapital()), 10,35);
+            g2d.drawString("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ", 10,50);
+            g2d.drawString("Year: " + time, 10,65);
         }
     }
 
@@ -295,7 +294,12 @@ public class FullGame extends Game {
         for (Equipment e : player.getInventory()) {
             //TODO randomize this
             player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
+            e.updateProductionLevel();
         }
+        store.clearInventory();
+        store.generateInventory("wind");
+        store.generateInventory("solar");
+        store.generateInventory("hydro");
         market.calculateCurrentPrice();
         setTime(getTime() + 1);
     }

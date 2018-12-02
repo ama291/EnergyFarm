@@ -23,7 +23,7 @@ public class FullGame extends Game {
 
     public FullGame(double capital) {
         super("EnergyFarm", 1000, 750);
-        time = 0;
+        time = 1;
         market = new Market(50);
         market.calculateCurrentPrice();
         store = new Store(50000, 20000,200000);
@@ -112,16 +112,28 @@ public class FullGame extends Game {
                 JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
-                JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " units");
+                JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " Joule(s)");
+                JTextField quantity = new JTextField("\t");
+                quantity.setMaximumSize(quantity.getPreferredSize());
                 JButton buy = new JButton("Buy");
                 buy.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (player.getCapital() < i.getPrice()) {
+                        int quant = 0;
+                        try {
+                            quant = Integer.parseInt(quantity.getText());
+                        }
+                        catch (Exception x) {}
+                        if (quant < 1) {
+                            JOptionPane.showMessageDialog(null, "Invalid quantity.");
+                        }
+                        else if (player.getCapital() < i.getPrice()*quant) {
                             JOptionPane.showMessageDialog(null, "*** SORRY: YOU CANNOT AFFORD THIS! ***");
                         } else {
-                            player.getInventory().add(i);
-                            player.setCapital(player.getCapital() - i.getPrice());
+                            for (int x=0; x<quant; x++) {
+                                player.getInventory().add(i);
+                            }
+                            player.setCapital(player.getCapital() - i.getPrice()*quant);
                             uiopen = false;
                             ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
                             storeUI();
@@ -133,6 +145,8 @@ public class FullGame extends Game {
                 contentPane.add(price);
                 contentPane.add(installfee);
                 contentPane.add(productionlevel);
+                contentPane.add(quantity);
+                quantity.setText("1");
                 contentPane.add(buy);
             }
             ui.setLocationRelativeTo(null);
@@ -198,30 +212,35 @@ public class FullGame extends Game {
             Container contentPane = ui.getContentPane();
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
             JLabel mark = new JLabel("*** Market ***");
-            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " units");
-            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per unit");
-            JLabel qlabel = new JLabel("Quantity: ");
-            JTextField quantity = new JTextField("1");
+            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " Joule(s)");
+            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per Joule");
+            JTextField quantity = new JTextField("\t");
+            quantity.setMaximumSize(quantity.getPreferredSize());
             JButton sell = new JButton("Sell");
             sell.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    int quant = Integer.parseInt(quantity.getText());
+                    int quant = 0;
+                    try {
+                        quant = Integer.parseInt(quantity.getText());
+                    }
+                    catch (Exception x) {}
                     if (quant > player.getEnergyStored() || quant < 1) {
                         JOptionPane.showMessageDialog(null, "Invalid quantity.");
                     }
                     else {
                         player.setEnergyStored(player.getEnergyStored() - quant);
                         player.setCapital(player.getCapital() + quant*market.getCurrentPrice());
-                        energy.setText("Energy Stored: " + player.getEnergyStored() + " units");
+                        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                        marketUI();
                     }
                 }
             });
             contentPane.add(mark);
             contentPane.add(energy);
             contentPane.add(price);
-            contentPane.add(qlabel);
             contentPane.add(quantity);
+            quantity.setText("1");
             contentPane.add(sell);
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
@@ -242,7 +261,8 @@ public class FullGame extends Game {
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
             g2d.drawString("Capital: " + currency + player.getCapital(), 0,10);
-            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " units", 0,25);
+            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " Joule(s)", 0,25);
+            g2d.drawString("Year: " + time, 0,40);
         }
     }
 

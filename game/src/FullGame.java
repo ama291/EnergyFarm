@@ -58,7 +58,7 @@ public class FullGame extends Game {
     public void renderFarm() {
         int objects = player.getInventory().size();
         if (objects != 0) {
-            Point start = new Point(0, 100);
+            Point start = new Point(0, 120);
             int w = 1000;
             int h = 400;
             //remove previous images

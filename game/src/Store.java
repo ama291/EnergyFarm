@@ -50,6 +50,18 @@ public class Store {
         return 1;
     }
 
+    public double generateStd(String equipmentType) {
+        if (equipmentType == "wind") {
+            return 0.05;
+        } else if (equipmentType == "solar") {
+            return 0.01;
+        } else if (equipmentType == "hydro") {
+            return 0.1;
+        }
+        return 1;
+    }
+
+
     public double generateInstallFee(String equipmentType) {
         // TODO: add installation fee feature
         return 0;
@@ -59,6 +71,7 @@ public class Store {
         this.inventory.add(new Equipment(equipmentType,
                 generatePrice(equipmentType),
                 generateEfficiency(equipmentType),
+                generateStd(equipmentType),
                 generateInstallFee(equipmentType)));
     }
 

@@ -133,6 +133,7 @@ public class FullGame extends Game {
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
                 JLabel productionlevel = new JLabel("Average Annual Production: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
+                JLabel productionstd = new JLabel("Annual Production STDDEV: " + String.format("%.2f", i.getProductionStd() * 100) + "%");
                 JTextField quantity = new JTextField("\t");
                 quantity.setMaximumSize(quantity.getPreferredSize());
                 JButton buy = new JButton("Buy");
@@ -165,6 +166,7 @@ public class FullGame extends Game {
                 contentPane.add(price);
                 contentPane.add(installfee);
                 contentPane.add(productionlevel);
+                contentPane.add(productionstd);
                 contentPane.add(quantity);
                 quantity.setText("1");
                 contentPane.add(buy);
@@ -206,7 +208,7 @@ public class FullGame extends Game {
                 separator = new JLabel("\n");
                 JLabel itemNumber = new JLabel("\t\t*** EQUIPMENT #" + equipmentNumber + " *** \t\t");
                 JLabel name = new JLabel("\t\tType: " + i.getName());
-                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " kJ");
+                JLabel productionlevel = new JLabel("\t\tProduction Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 contentPane.add(separator);
                 contentPane.add(itemNumber);
                 contentPane.add(name);

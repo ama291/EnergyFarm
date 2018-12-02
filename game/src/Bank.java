@@ -18,6 +18,7 @@ public class Bank {
 
     //Methods
     public double getRate() { return interestRate; }
+    public int getMaturity() { return maturity; }
 
     public double computePayment(double borrowed) {
         return borrowed + (borrowed * interestRate);
@@ -31,10 +32,22 @@ public class Bank {
         return debtPayments[year];
     }
 
+    public void settlePayment(int year) {
+        debtPayments[year] = 0;
+    }
+
     public void updateRate() {
         Random r = new Random();
         double returns = r.nextGaussian() * 0.005;
         interestRate += returns;
+    }
+
+    public double totalDebt() {
+        double total = 0;
+        for (int i = 0; i < debtPayments.length; i++) {
+            total += debtPayments[i];
+        }
+        return total;
     }
 
 }

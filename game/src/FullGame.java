@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class FullGame extends Game {
 
     int time;
+    int gameSpan;
     Market market;
     Store store;
     Player player;
@@ -21,9 +22,10 @@ public class FullGame extends Game {
     boolean uiopen = false;
     String currency = "$";
 
-    public FullGame(double capital) {
+    public FullGame(double capital, int gameSpan) {
         super("EnergyFarm", 1000, 750);
         time = 1;
+        this.gameSpan = gameSpan;
         market = new Market(50);
         market.calculateCurrentPrice();
         store = new Store(50000, 20000,200000);
@@ -285,7 +287,11 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
-            g2d.drawString("*** Game Progress ***", 10,15);
+            if (time < gameSpan) {
+                g2d.drawString("*** Game Progress ***", 10,15);
+            } else {
+                g2d.drawString("*** Game Over ***", 10,15);
+            }
             g2d.drawString("Capital: " + currency + String.format("%.2f", player.getCapital()), 10,35);
             g2d.drawString("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ", 10,50);
             g2d.drawString("Year: " + time, 10,65);
@@ -293,16 +299,18 @@ public class FullGame extends Game {
     }
 
     public void advance() {
-        for (Equipment e : player.getInventory()) {
-            //TODO randomize this
-            player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
-            e.updateProductionLevel();
+        if (time < gameSpan) {
+            for (Equipment e : player.getInventory()) {
+                //TODO randomize this
+                player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
+                e.updateProductionLevel();
+            }
+            store.clearInventory();
+            store.generateInventory("wind");
+            store.generateInventory("solar");
+            store.generateInventory("hydro");
+            market.calculateCurrentPrice();
+            setTime(getTime() + 1);
         }
-        store.clearInventory();
-        store.generateInventory("wind");
-        store.generateInventory("solar");
-        store.generateInventory("hydro");
-        market.calculateCurrentPrice();
-        setTime(getTime() + 1);
     }
 }

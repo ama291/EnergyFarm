@@ -65,6 +65,7 @@ public class Main {
             while ((l = fr.readLine()) != null) {
                 scores.add(l);
             }
+            fr.close();
         }
         catch(Exception e) {
             scores.add("No hiscores.");

@@ -118,7 +118,7 @@ public class FullGame extends Game {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (player.getCapital() < i.getPrice()) {
-                            popupMessage(ui,"\t\t*** SORRY: YOU CANNOT AFFORD THIS! ***");
+                            JOptionPane.showMessageDialog(null, "*** SORRY: YOU CANNOT AFFORD THIS! ***");
                         } else {
                             player.getInventory().add(i);
                             player.setCapital(player.getCapital() - i.getPrice());
@@ -148,26 +148,6 @@ public class FullGame extends Game {
         }
     }
 
-    public void popupMessage(JFrame ui, String message) {
-        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
-        JFrame newUi = new JFrame("Notification!");
-        newUi.setSize(300,200);
-        newUi.setResizable(false);
-        Container contentPane = newUi.getContentPane();
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
-        JLabel msg = new JLabel(message);
-        contentPane.add(msg);
-        newUi.setLocationRelativeTo(null);
-        newUi.setVisible(true);
-        newUi.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                uiopen = false;
-                super.windowClosing(e);
-            }
-        });
-        this.ui = newUi;
-    }
 
     public void inventoryUI() {
         if (!uiopen) {
@@ -217,6 +197,7 @@ public class FullGame extends Game {
             ui.setResizable(false);
             Container contentPane = ui.getContentPane();
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            JLabel mark = new JLabel("*** Market ***");
             JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " units");
             JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per unit");
             JLabel qlabel = new JLabel("Quantity: ");
@@ -236,7 +217,7 @@ public class FullGame extends Game {
                     }
                 }
             });
-
+            contentPane.add(mark);
             contentPane.add(energy);
             contentPane.add(price);
             contentPane.add(qlabel);

@@ -19,7 +19,7 @@ public class Bank {
     //Methods
     public double getRate() { return interestRate; }
 
-    public void computePayment(double borrowed) {
+    public double computePayment(double borrowed) {
         return borrowed + (borrowed * interestRate);
     }
 

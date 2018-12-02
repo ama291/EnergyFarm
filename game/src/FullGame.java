@@ -12,20 +12,24 @@ public class FullGame extends Game {
 
     int time;
     int gameSpan;
+    int level;
     Market market;
     Store store;
     Player player;
+    Bank bank;
     Sprite character = new Sprite("Character", "player.png");
     Sprite storeSprite = new Sprite("Store", "store.jpg");
     Sprite marketSprite = new Sprite("Market", "market.png");
+    Sprite bankSprite = new Sprite("Bank", "bank.png");
     JFrame ui;
     boolean uiopen = false;
     String currency = "$";
     int elements = 0;
 
-    public FullGame(double capital, int gameSpan) {
+    public FullGame(int gameLevel, double capital, int gameSpan) {
         super("EnergyFarm", 1000, 750);
         time = 1;
+        level = gameLevel;
         this.gameSpan = gameSpan;
         market = new Market(50);
         market.calculateCurrentPrice();
@@ -34,12 +38,15 @@ public class FullGame extends Game {
         store.generateInventory("solar");
         store.generateInventory("hydro");
         player = new Player(capital);
+        bank = new Bank(0.1, 5, gameSpan);
         this.addChild(storeSprite);
         this.addChild(marketSprite);
+        this.addChild(bankSprite);
         this.addChild(character);
-        character.setPosition(new Point(475, 500));
+        character.setPosition(new Point(460, 400));
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
+        bankSprite.setPosition(new Point(375, 568));
         elements = this.getChildren().size();
         renderFarm();
     }
@@ -135,6 +142,9 @@ public class FullGame extends Game {
                 if (character.collidesWith(marketSprite)) {
                     marketUI();
                 }
+                if (character.collidesWith(bankSprite)) {
+                    bankUI();
+                }
             }
             if (pressedKeys.contains(KeyEvent.VK_I)) {
                 try {
@@ -161,6 +171,37 @@ public class FullGame extends Game {
     }
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public void bankUI() {
+        // Set up UI
+        this.ui = new JFrame("Bank");
+        ui.setSize(500,500);
+        ui.setResizable(false);
+        Container contentPane = new Container();
+        JScrollPane scrollPane = new JScrollPane(contentPane);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        ui.add(scrollPane);
+        // Add Content
+        if (level != 3) {
+            JLabel sorry = new JLabel("*** Bank only available in Expert difficulty ***");
+            contentPane.add(new JLabel("\n"));
+            contentPane.add(sorry);
+        } else {
+
+        }
+        // Publish UI
+        ui.setLocationRelativeTo(null);
+        ui.setVisible(true);
+        ui.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                uiopen = false;
+                super.windowClosing(e);
+            }
+        });
+        uiopen = true;
+
     }
 
     public void storeUI() {

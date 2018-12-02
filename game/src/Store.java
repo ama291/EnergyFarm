@@ -8,17 +8,40 @@ public class Store {
     private double windPrice;
     private double solarPrice;
     private double hydroPrice;
+    private double windProduction;
+    private double solarProduction;
+    private double hydroProduction;
+    private double windStd;
+    private double solarStd;
+    private double hydroStd;
     private JFrame ui;
     boolean uiopen = false;
 
-    public Store(double windPrice, double solarPrice, double hydroPrice) {
+    public Store() {
         this.inventory = new ArrayList<Equipment>();
+    }
+
+    public ArrayList<Equipment> getInventory() { return inventory; }
+    public void clearInventory() { this.inventory = new ArrayList<Equipment>(); }
+
+    public void setPrice(double windPrice, double solarPrice, double hydroPrice) {
         this.windPrice = windPrice;
         this.solarPrice = solarPrice;
         this.hydroPrice = hydroPrice;
     }
 
-    public ArrayList<Equipment> getInventory() { return inventory; }
+
+    public void setProduction(double windProduction, double solarProduction, double hydroProduction) {
+        this.windProduction = windProduction;
+        this.solarProduction = solarProduction;
+        this.hydroProduction = hydroProduction;
+    }
+
+    public void setStd(double windStd, double solarStd, double hydroStd) {
+        this.windStd = windStd;
+        this.solarStd = solarStd;
+        this.hydroStd = hydroStd;
+    }
 
     public double generatePrice(String equipmentType) {
         //TODO actually calculate
@@ -39,16 +62,27 @@ public class Store {
     }
 
     public double generateEfficiency(String equipmentType) {
-        //TODO: make non-constant efficiency
         if (equipmentType == "wind") {
-            return 100;
+            return windProduction;
         } else if (equipmentType == "solar") {
-            return 10;
+            return solarProduction;
         } else if (equipmentType == "hydro") {
-            return 1000;
+            return hydroProduction;
         }
         return 1;
     }
+
+    public double generateStd(String equipmentType) {
+        if (equipmentType == "wind") {
+            return windStd;
+        } else if (equipmentType == "solar") {
+            return solarStd;
+        } else if (equipmentType == "hydro") {
+            return hydroStd;
+        }
+        return 1;
+    }
+
 
     public double generateInstallFee(String equipmentType) {
         // TODO: add installation fee feature
@@ -59,6 +93,7 @@ public class Store {
         this.inventory.add(new Equipment(equipmentType,
                 generatePrice(equipmentType),
                 generateEfficiency(equipmentType),
+                generateStd(equipmentType),
                 generateInstallFee(equipmentType)));
     }
 

@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class FullGame extends Game {
 
     int time;
+    int gameSpan;
     Market market;
     Store store;
     Player player;
@@ -22,12 +23,13 @@ public class FullGame extends Game {
     String currency = "$";
     int elements = 0;
 
-    public FullGame(double capital) {
+    public FullGame(double capital, int gameSpan) {
         super("EnergyFarm", 1000, 750);
         time = 1;
+        this.gameSpan = gameSpan;
         market = new Market(50);
         market.calculateCurrentPrice();
-        store = new Store(50000, 20000,200000);
+        store = new Store();
         store.generateInventory("wind");
         store.generateInventory("solar");
         store.generateInventory("hydro");
@@ -38,16 +40,6 @@ public class FullGame extends Game {
         character.setPosition(new Point(475, 500));
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
-        player.setEnergyStored(1000);
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
-        player.getInventory().add(store.getInventory().get(1));
         elements = this.getChildren().size();
         renderFarm();
     }
@@ -117,7 +109,7 @@ public class FullGame extends Game {
         super.update(pressedKeys);
         if(character != null) character.update(pressedKeys);
 
-        if (!uiopen) {
+        if (!uiopen && time < gameSpan) {
             if (pressedKeys.contains(KeyEvent.VK_UP)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y - 5));
             }
@@ -195,7 +187,8 @@ public class FullGame extends Game {
                 JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
-                JLabel productionlevel = new JLabel("Production Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
+                JLabel productionlevel = new JLabel("Average Annual Production: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
+                JLabel productionstd = new JLabel("Annual Production STDDEV: " + String.format("%.2f", i.getProductionStd() * 100) + "%");
                 JTextField quantity = new JTextField("\t");
                 quantity.setMaximumSize(quantity.getPreferredSize());
                 JButton buy = new JButton("Buy");
@@ -229,6 +222,7 @@ public class FullGame extends Game {
                 contentPane.add(price);
                 contentPane.add(installfee);
                 contentPane.add(productionlevel);
+                contentPane.add(productionstd);
                 contentPane.add(quantity);
                 quantity.setText("1");
                 contentPane.add(buy);
@@ -270,7 +264,7 @@ public class FullGame extends Game {
                 separator = new JLabel("\n");
                 JLabel itemNumber = new JLabel("\t\t*** EQUIPMENT #" + equipmentNumber + " *** \t\t");
                 JLabel name = new JLabel("\t\tType: " + i.getName());
-                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " kJ");
+                JLabel productionlevel = new JLabel("\t\tProduction Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 contentPane.add(separator);
                 contentPane.add(itemNumber);
                 contentPane.add(name);
@@ -299,8 +293,8 @@ public class FullGame extends Game {
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
             ui.add(scrollPane);
             JLabel mark = new JLabel("*** Market ***");
-            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " kJ");
-            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per kJ");
+            JLabel energy = new JLabel("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ");
+            JLabel price = new JLabel("Current Market Price: $" + String.format("%.2f", market.getCurrentPrice()) + " per kJ");
             JTextField quantity = new JTextField("\t");
             quantity.setMaximumSize(quantity.getPreferredSize());
             JButton sell = new JButton("Sell");
@@ -347,18 +341,30 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
-            g2d.drawString("Capital: " + currency + player.getCapital(), 0,10);
-            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " kJ", 0,25);
-            g2d.drawString("Year: " + time, 0,40);
+            if (time < gameSpan) {
+                g2d.drawString("*** Game Progress ***", 10,15);
+            } else {
+                g2d.drawString("*** Game Over ***", 10,15);
+            }
+            g2d.drawString("Capital: " + currency + String.format("%.2f", player.getCapital()), 10,35);
+            g2d.drawString("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ", 10,50);
+            g2d.drawString("Year: " + time, 10,65);
         }
     }
 
     public void advance() {
-        for (Equipment e : player.getInventory()) {
-            //TODO randomize this
-            player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
+        if (time < gameSpan) {
+            for (Equipment e : player.getInventory()) {
+                //TODO randomize this
+                player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
+                e.updateProductionLevel();
+            }
+            store.clearInventory();
+            store.generateInventory("wind");
+            store.generateInventory("solar");
+            store.generateInventory("hydro");
+            market.calculateCurrentPrice();
+            setTime(getTime() + 1);
         }
-        market.calculateCurrentPrice();
-        setTime(getTime() + 1);
     }
 }

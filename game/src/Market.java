@@ -19,7 +19,7 @@ public class Market {
 
     public void calculateCurrentPrice() {
         Random r = new Random();
-        double returns = r.nextGaussian()*2; // mean 0, std 2
+        double returns = r.nextGaussian()*0.15; // mean 0, std 0.15
         double nextPrice = this.currentPrice + (this.currentPrice * returns);
         setCurrentPrice(nextPrice);
     }

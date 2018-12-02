@@ -22,6 +22,7 @@ public class FullGame extends Game {
     Sprite marketSprite = new Sprite("Market", "market.png");
     Sprite bankSprite = new Sprite("Bank", "bank.png");
     JFrame ui;
+    boolean gameOver = false;
     boolean uiopen = false;
     String currency = "$";
     int elements = 0;
@@ -33,7 +34,8 @@ public class FullGame extends Game {
         level = gameLevel;
         this.gameSpan = gameSpan;
         market = new Market(50);
-        market.calculateCurrentPrice();
+        market.calculateNextPrice();
+        market.updatePrice();
         store = new Store();
         store.generateInventory("wind");
         store.generateInventory("solar");
@@ -116,9 +118,10 @@ public class FullGame extends Game {
     @Override
     public void update(ArrayList<Integer> pressedKeys){
         super.update(pressedKeys);
+        gameOver = (time > gameSpan) || (player.getCapital() < 0);
         if(character != null) character.update(pressedKeys);
 
-        if (!uiopen && time < gameSpan) {
+        if (!uiopen && !gameOver) {
             if (pressedKeys.contains(KeyEvent.VK_UP)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y - 5));
             }
@@ -189,7 +192,37 @@ public class FullGame extends Game {
             contentPane.add(new JLabel("\n"));
             contentPane.add(sorry);
         } else {
-
+            JLabel capital = new JLabel("\t\t*** Your Capital:" + currency + player.getCapital() + " ***");
+            JLabel title = new JLabel("\t\t*** Bank Loan Terms ***");
+            JLabel terms = new JLabel("\t\tInterest Rate: " + 100*bank.getRate() + "%, Maturity: " + bank.getMaturity() + " years. Each bond is " + currency + "1000.");
+            JTextField quantity = new JTextField("1");
+            quantity.setMaximumSize(new Dimension(300, 30));
+            JButton borrow = new JButton("Borrow");
+            borrow.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int quant = 0;
+                    try {
+                        quant = Integer.parseInt(quantity.getText());
+                    }
+                    catch (Exception x) {}
+                    if (quant < 1) {
+                        JOptionPane.showMessageDialog(null, "Invalid quantity.");
+                    } else {
+                        player.setCapital(player.getCapital() + 1000*quant);
+                        bank.addPayment(time + bank.getMaturity(), bank.computePayment(1000*quant));
+                        uiopen = false;
+                        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                        bankUI();
+                    }
+                }
+            });
+            contentPane.add(new JLabel("\n"));
+            contentPane.add(capital);
+            contentPane.add(title);
+            contentPane.add(terms);
+            contentPane.add(quantity);
+            contentPane.add(borrow);
         }
         // Publish UI
         ui.setLocationRelativeTo(null);
@@ -363,6 +396,17 @@ public class FullGame extends Game {
             contentPane.add(mark);
             contentPane.add(energy);
             contentPane.add(price);
+            if (level == 1) {
+                market.calculateNextPrice();
+                double nextPrice = market.getNextPrice();
+                JLabel hint;
+                if (nextPrice > market.getCurrentPrice()) {
+                    hint = new JLabel("Hint: Price is trending up next year!");
+                } else {
+                    hint = new JLabel("Hint: Price is trending down next year!");
+                }
+                contentPane.add(hint);
+            }
             contentPane.add(quantity);
             quantity.setText("1");
             contentPane.add(sell);
@@ -384,29 +428,36 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
-            if (time < gameSpan) {
+            if (!gameOver) {
                 g2d.drawString("*** Game Progress ***", 10,15);
             } else {
                 g2d.drawString("*** Game Over ***", 10,15);
             }
             g2d.drawString("Capital: " + currency + String.format("%.2f", player.getCapital()), 10,35);
-            g2d.drawString("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ", 10,50);
-            g2d.drawString("Year: " + time, 10,65);
+            g2d.drawString("Total Debt: " + currency + String.format("%.2f", bank.totalDebt()), 10, 50);
+            g2d.drawString("Debt Due This Year: " + currency + String.format("%.2f", bank.getPayment(time)), 10, 65);
+            g2d.drawString("Energy Stored: " + String.format("%.2f", player.getEnergyStored()) + " kJ", 10,80);
+            g2d.drawString("Year: " + time, 10,95);
         }
     }
 
     public void advance() {
-        if (time < gameSpan) {
+        if (!gameOver) {
             for (Equipment e : player.getInventory()) {
                 //TODO randomize this
                 player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
                 e.updateProductionLevel();
             }
+            if (bank.getPayment(time) != 0) {
+                player.setCapital(player.getCapital() - bank.getPayment(time));
+                bank.settlePayment(time);
+            }
             store.clearInventory();
             store.generateInventory("wind");
             store.generateInventory("solar");
             store.generateInventory("hydro");
-            market.calculateCurrentPrice();
+            market.calculateNextPrice();
+            market.updatePrice();
             setTime(getTime() + 1);
         }
     }

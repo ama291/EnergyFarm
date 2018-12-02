@@ -37,6 +37,17 @@ public class FullGame extends Game {
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         player.setEnergyStored(1000);
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+        player.getInventory().add(store.getInventory().get(1));
+
+
     }
 
     @Override
@@ -78,6 +89,14 @@ public class FullGame extends Game {
                 }
                 inventoryUI();
             }
+            if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                advance();
+            }
         }
 
     }
@@ -94,8 +113,10 @@ public class FullGame extends Game {
             this.ui = new JFrame("Store");
             ui.setSize(500,500);
             ui.setResizable(false);
-            Container contentPane = ui.getContentPane();
+            Container contentPane = new Container();
+            JScrollPane scrollPane = new JScrollPane(contentPane);
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            ui.add(scrollPane);
             // Add Player Inventories
             JLabel inventories = new JLabel("*** Your Inventories ***");
             HashMap counts = player.getEquipmentCounts();
@@ -169,24 +190,25 @@ public class FullGame extends Game {
             ui.setSize(500,500);
             ui.setResizable(false);
             // Create Content Pane
-            Container contentPane = ui.getContentPane();
+            Container contentPane = new Container();
+            JScrollPane scrollPane = new JScrollPane(contentPane);
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
-            JLabel seperator = new JLabel("\n");
+            ui.add(scrollPane);
+            JLabel separator = new JLabel("\n");
             // Add Player Resources
             JLabel summary = new JLabel("\t\t*** SUMMARY ***");
             JLabel capital = new JLabel("\t\tCurrent Capital: $" + player.getCapital());
-            contentPane.add(seperator);
             contentPane.add(summary);
             contentPane.add(capital);
             // Add Equipments
             int equipmentNumber = 0;
             for (Equipment i : player.getInventory()) {
                 equipmentNumber++;
-                seperator = new JLabel("\n");
-                JLabel itemNumber = new JLabel("\t\t *** EQUIPMENT #" + equipmentNumber + " *** \t\t");
+                separator = new JLabel("\n");
+                JLabel itemNumber = new JLabel("\t\t*** EQUIPMENT #" + equipmentNumber + " *** \t\t");
                 JLabel name = new JLabel("\t\tType: " + i.getName());
                 JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " Joule(s)");
-                contentPane.add(seperator);
+                contentPane.add(separator);
                 contentPane.add(itemNumber);
                 contentPane.add(name);
                 contentPane.add(productionlevel);
@@ -209,8 +231,10 @@ public class FullGame extends Game {
             this.ui = new JFrame("Market");
             ui.setSize(500,500);
             ui.setResizable(false);
-            Container contentPane = ui.getContentPane();
+            Container contentPane = new Container();
+            JScrollPane scrollPane = new JScrollPane(contentPane);
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            ui.add(scrollPane);
             JLabel mark = new JLabel("*** Market ***");
             JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " Joule(s)");
             JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per Joule");
@@ -271,6 +295,7 @@ public class FullGame extends Game {
             //TODO randomize this
             player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());
         }
+        market.calculateCurrentPrice();
         setTime(getTime() + 1);
     }
 }

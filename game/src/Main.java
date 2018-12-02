@@ -11,7 +11,7 @@ public class Main {
         menu.setResizable(false);
         Container contentPane = menu.getContentPane();
         JLabel instructions = new JLabel("Instructions:");
-        JLabel actualInstructions = new JLabel("<html>Press I to view your current inventory. Walk onto the store or the market, and press Enter to bring up the interface.</html>");
+        JLabel actualInstructions = new JLabel("<html>Press I to view your current inventory. Walk onto the store or the market, and press Enter to bring up the interface. Press Space to advance time.</html>");
         actualInstructions.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
         JButton startButton  = new JButton("Start Game");

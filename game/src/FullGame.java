@@ -29,6 +29,7 @@ public class FullGame extends Game {
         store = new Store(50000, 20000,200000);
         store.generateInventory("wind");
         store.generateInventory("solar");
+        store.generateInventory("hydro");
         player = new Player(capital);
         this.addChild(storeSprite);
         this.addChild(marketSprite);
@@ -121,9 +122,9 @@ public class FullGame extends Game {
             JLabel inventories = new JLabel("*** Your Inventories ***");
             HashMap counts = player.getEquipmentCounts();
             JLabel equipmentCounts = new JLabel("Wind: " + counts.get("wind") + ", Solar: " + counts.get("solar") + ", Hydro: " + counts.get("hydro"));
-            JLabel myCapital = new JLabel("Capital: $" + player.getCapital());
-            contentPane.add(myCapital);
+            JLabel myCapital = new JLabel("Capital: $" + String.format("%.2f", player.getCapital()));
             contentPane.add(inventories);
+            contentPane.add(myCapital);
             contentPane.add(equipmentCounts);
             contentPane.add(new JLabel("\n"));
 
@@ -133,7 +134,7 @@ public class FullGame extends Game {
                 JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
-                JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " Joule(s)");
+                JLabel productionlevel = new JLabel("Production Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 JTextField quantity = new JTextField("\t");
                 quantity.setMaximumSize(quantity.getPreferredSize());
                 JButton buy = new JButton("Buy");
@@ -149,7 +150,7 @@ public class FullGame extends Game {
                             JOptionPane.showMessageDialog(null, "Invalid quantity.");
                         }
                         else if (player.getCapital() < i.getPrice()*quant) {
-                            JOptionPane.showMessageDialog(null, "*** SORRY: YOU CANNOT AFFORD THIS! ***");
+                            JOptionPane.showMessageDialog(null, "Sorry: you cannot afford this!");
                         } else {
                             for (int x=0; x<quant; x++) {
                                 player.getInventory().add(i);
@@ -197,7 +198,7 @@ public class FullGame extends Game {
             JLabel separator = new JLabel("\n");
             // Add Player Resources
             JLabel summary = new JLabel("\t\t*** SUMMARY ***");
-            JLabel capital = new JLabel("\t\tCurrent Capital: $" + player.getCapital());
+            JLabel capital = new JLabel("\t\tCurrent Capital: $" + String.format("%.2f", player.getCapital()));
             contentPane.add(summary);
             contentPane.add(capital);
             // Add Equipments
@@ -207,7 +208,7 @@ public class FullGame extends Game {
                 separator = new JLabel("\n");
                 JLabel itemNumber = new JLabel("\t\t*** EQUIPMENT #" + equipmentNumber + " *** \t\t");
                 JLabel name = new JLabel("\t\tType: " + i.getName());
-                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " Joule(s)");
+                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " kJ");
                 contentPane.add(separator);
                 contentPane.add(itemNumber);
                 contentPane.add(name);
@@ -236,8 +237,8 @@ public class FullGame extends Game {
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
             ui.add(scrollPane);
             JLabel mark = new JLabel("*** Market ***");
-            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " Joule(s)");
-            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per Joule");
+            JLabel energy = new JLabel("Energy Stored: " + player.getEnergyStored() + " kJ");
+            JLabel price = new JLabel("Current Market Price: $" + market.getCurrentPrice() + " per kJ");
             JTextField quantity = new JTextField("\t");
             quantity.setMaximumSize(quantity.getPreferredSize());
             JButton sell = new JButton("Sell");
@@ -285,7 +286,7 @@ public class FullGame extends Game {
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
             g2d.drawString("Capital: " + currency + player.getCapital(), 0,10);
-            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " Joule(s)", 0,25);
+            g2d.drawString("Energy Stored: " + player.getEnergyStored() + " kJ", 0,25);
             g2d.drawString("Year: " + time, 0,40);
         }
     }

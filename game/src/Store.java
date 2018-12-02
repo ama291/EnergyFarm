@@ -23,7 +23,7 @@ public class Store {
     public double generatePrice(String equipmentType) {
         //TODO actually calculate
         Random r = new Random();
-        double returns = r.nextGaussian() * 0.5; // mean 0, std 0.5
+        double returns = r.nextGaussian() * 0.05; // mean 0, std 0.05
         double nextPrice = 0;
         if (equipmentType == "wind") {
             this.windPrice = this.windPrice + (this.windPrice * returns);
@@ -40,6 +40,13 @@ public class Store {
 
     public double generateEfficiency(String equipmentType) {
         //TODO: make non-constant efficiency
+        if (equipmentType == "wind") {
+            return 100;
+        } else if (equipmentType == "solar") {
+            return 10;
+        } else if (equipmentType == "hydro") {
+            return 1000;
+        }
         return 1;
     }
 

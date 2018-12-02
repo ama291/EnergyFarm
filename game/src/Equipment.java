@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Equipment {
     private double price;
     private double productionLevel;
@@ -14,7 +16,10 @@ public class Equipment {
     public String getName() { return name; }
     public double getPrice() { return price; }
     public double getProductionLevel() {
-        return productionLevel;
+        Random r = new Random();
+        double returns = r.nextGaussian() * 0.1; // Mean 0, Standard Deviation 0.1
+        this.productionLevel = productionLevel + (productionLevel * returns);
+        return this.productionLevel;
     }
 
     public double getInstallFee() { return installFee; }

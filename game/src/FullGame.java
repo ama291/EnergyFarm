@@ -29,6 +29,7 @@ public class FullGame extends Game {
         store = new Store(50000, 20000,200000);
         store.generateInventory("wind");
         store.generateInventory("solar");
+        store.generateInventory("hydro");
         player = new Player(capital);
         this.addChild(storeSprite);
         this.addChild(marketSprite);
@@ -100,9 +101,9 @@ public class FullGame extends Game {
             JLabel inventories = new JLabel("*** Your Inventories ***");
             HashMap counts = player.getEquipmentCounts();
             JLabel equipmentCounts = new JLabel("Wind: " + counts.get("wind") + ", Solar: " + counts.get("solar") + ", Hydro: " + counts.get("hydro"));
-            JLabel myCapital = new JLabel("Capital: $" + player.getCapital());
-            contentPane.add(myCapital);
+            JLabel myCapital = new JLabel("Capital: $" + String.format("%.2f", player.getCapital()));
             contentPane.add(inventories);
+            contentPane.add(myCapital);
             contentPane.add(equipmentCounts);
             contentPane.add(new JLabel("\n"));
 
@@ -112,13 +113,13 @@ public class FullGame extends Game {
                 JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
-                JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " units");
+                JLabel productionlevel = new JLabel("Production Level: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 JButton buy = new JButton("Buy");
                 buy.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (player.getCapital() < i.getPrice()) {
-                            JOptionPane.showMessageDialog(null, "*** SORRY: YOU CANNOT AFFORD THIS! ***");
+                            JOptionPane.showMessageDialog(null, "Sorry: you cannot afford this!");
                         } else {
                             player.getInventory().add(i);
                             player.setCapital(player.getCapital() - i.getPrice());
@@ -160,7 +161,7 @@ public class FullGame extends Game {
             JLabel seperator = new JLabel("\n");
             // Add Player Resources
             JLabel summary = new JLabel("\t\t*** SUMMARY ***");
-            JLabel capital = new JLabel("\t\tCurrent Capital: $" + player.getCapital());
+            JLabel capital = new JLabel("\t\tCurrent Capital: $" + String.format("%.2f", player.getCapital()));
             contentPane.add(seperator);
             contentPane.add(summary);
             contentPane.add(capital);
@@ -171,7 +172,7 @@ public class FullGame extends Game {
                 seperator = new JLabel("\n");
                 JLabel itemNumber = new JLabel("\t\t *** EQUIPMENT #" + equipmentNumber + " *** \t\t");
                 JLabel name = new JLabel("\t\tType: " + i.getName());
-                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " Joule(s)");
+                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " kJ");
                 contentPane.add(seperator);
                 contentPane.add(itemNumber);
                 contentPane.add(name);

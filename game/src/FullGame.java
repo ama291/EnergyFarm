@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class FullGame extends Game {
@@ -25,8 +26,9 @@ public class FullGame extends Game {
         time = 0;
         market = new Market(50);
         market.calculateCurrentPrice();
-        store = new Store(50, 50 ,50);
+        store = new Store(50000, 20000,200000);
         store.generateInventory("wind");
+        store.generateInventory("solar");
         player = new Player(capital);
         this.addChild(storeSprite);
         this.addChild(marketSprite);
@@ -94,18 +96,39 @@ public class FullGame extends Game {
             ui.setResizable(false);
             Container contentPane = ui.getContentPane();
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            // Add Player Inventories
+            JLabel inventories = new JLabel("*** Your Inventories ***");
+            HashMap counts = player.getEquipmentCounts();
+            JLabel equipmentCounts = new JLabel("Wind: " + counts.get("wind") + ", Solar: " + counts.get("solar") + ", Hydro: " + counts.get("hydro"));
+            JLabel myCapital = new JLabel("Capital: $" + player.getCapital());
+            contentPane.add(myCapital);
+            contentPane.add(inventories);
+            contentPane.add(equipmentCounts);
+            contentPane.add(new JLabel("\n"));
+
+            // Add Items for Sale
             for (Equipment i : store.getInventory()) {
-                JLabel name = new JLabel("Name: " + i.getName());
-                JLabel price = new JLabel("Price: $" + i.getPrice());
+                JLabel title = new JLabel("*** Item for Sale ***");
+                JLabel name = new JLabel("Type: " + i.getName());
+                JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
                 JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " units");
                 JButton buy = new JButton("Buy");
                 buy.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        player.getInventory().add(i);
+                        if (player.getCapital() < i.getPrice()) {
+                            popupMessage(ui,"\t\t*** SORRY: YOU CANNOT AFFORD THIS! ***");
+                        } else {
+                            player.getInventory().add(i);
+                            player.setCapital(player.getCapital() - i.getPrice());
+                            uiopen = false;
+                            ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                            storeUI();
+                        }
                     }
                 });
+                contentPane.add(title);
                 contentPane.add(name);
                 contentPane.add(price);
                 contentPane.add(installfee);
@@ -125,16 +148,52 @@ public class FullGame extends Game {
         }
     }
 
+    public void popupMessage(JFrame ui, String message) {
+        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+        JFrame newUi = new JFrame("Notification!");
+        newUi.setSize(300,200);
+        newUi.setResizable(false);
+        Container contentPane = newUi.getContentPane();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        JLabel msg = new JLabel(message);
+        contentPane.add(msg);
+        newUi.setLocationRelativeTo(null);
+        newUi.setVisible(true);
+        newUi.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                uiopen = false;
+                super.windowClosing(e);
+            }
+        });
+        this.ui = newUi;
+    }
+
     public void inventoryUI() {
         if (!uiopen) {
             this.ui = new JFrame("Inventory");
             ui.setSize(500,500);
             ui.setResizable(false);
+            // Create Content Pane
             Container contentPane = ui.getContentPane();
             contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+            JLabel seperator = new JLabel("\n");
+            // Add Player Resources
+            JLabel summary = new JLabel("\t\t*** SUMMARY ***");
+            JLabel capital = new JLabel("\t\tCurrent Capital: $" + player.getCapital());
+            contentPane.add(seperator);
+            contentPane.add(summary);
+            contentPane.add(capital);
+            // Add Equipments
+            int equipmentNumber = 0;
             for (Equipment i : player.getInventory()) {
-                JLabel name = new JLabel("Name: " + i.getName());
-                JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " units");
+                equipmentNumber++;
+                seperator = new JLabel("\n");
+                JLabel itemNumber = new JLabel("\t\t *** EQUIPMENT #" + equipmentNumber + " *** \t\t");
+                JLabel name = new JLabel("\t\tType: " + i.getName());
+                JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " Joule(s)");
+                contentPane.add(seperator);
+                contentPane.add(itemNumber);
                 contentPane.add(name);
                 contentPane.add(productionlevel);
             }

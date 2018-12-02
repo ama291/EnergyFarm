@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import javax.swing.*;
 
@@ -48,7 +49,7 @@ public class Store {
     }
 
     public void generateInventory(String equipmentType) {
-        this.inventory.add(new Equipment("Wind",
+        this.inventory.add(new Equipment(equipmentType,
                 generatePrice(equipmentType),
                 generateEfficiency(equipmentType),
                 generateInstallFee(equipmentType)));

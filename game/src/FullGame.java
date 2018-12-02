@@ -20,6 +20,7 @@ public class FullGame extends Game {
     JFrame ui;
     boolean uiopen = false;
     String currency = "$";
+    int elements = 0;
 
     public FullGame(double capital) {
         super("EnergyFarm", 1000, 750);
@@ -47,8 +48,68 @@ public class FullGame extends Game {
         player.getInventory().add(store.getInventory().get(1));
         player.getInventory().add(store.getInventory().get(1));
         player.getInventory().add(store.getInventory().get(1));
+        elements = this.getChildren().size();
+        renderFarm();
+    }
 
-
+    public void renderFarm() {
+        Point start = new Point(0, 80);
+        int w = 1000;
+        int h = 400;
+        //remove previous images
+        for (Equipment i : player.getInventory()) {
+            this.removeChild(i.getName());
+        }
+        int objects = player.getInventory().size();
+        //make farm look normal
+        if (objects < 10) {
+            objects = 10;
+        }
+        else if (objects % 2 != 0) {
+            objects += 1;
+        }
+        int pixelsperobj = w*h/objects;
+        double scale = Math.sqrt(pixelsperobj);
+        //find optimal scale
+        int columns = (int)Math.ceil(w / scale);
+        int x = 0;
+        int y = 0;
+        scale = w / columns;
+        int rows = (int)(h / scale);
+        if (objects > columns*rows) {
+            columns += 1;
+            scale = w / columns;
+            rows = (int)(h / scale);
+        }
+        System.out.println("Columns: " + columns + " Rows:" + rows);
+        for (Equipment i : player.getInventory()) {
+            if (i.getName() == "solar") {
+                Sprite image = new Sprite("solar", "solarpanel.png");
+                image.setScaleX(scale / image.getUnscaledWidth());
+                image.setScaleY(scale / image.getUnscaledHeight());
+                image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
+                this.addChild(image);
+            }
+            else if (i.getName() == "wind") {
+                Sprite image = new Sprite("wind", "solarpanel.png");
+                image.setScaleX(scale / image.getUnscaledWidth());
+                image.setScaleY(scale / image.getUnscaledHeight());
+                image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
+                this.addChild(image);
+            }
+            else if (i.getName() == "hydro") {
+                Sprite image = new Sprite("hydro", "solarpanel.png");
+                image.setScaleX(scale / image.getUnscaledWidth());
+                image.setScaleY(scale / image.getUnscaledHeight());
+                image.setPosition(new Point(start.x + (int)(x*scale), start.y+(int)(y*scale)));
+                this.addChild(image);
+            }
+            x += 1;
+            if (x > columns-1) {
+                y += 1;
+                x = 0;
+            }
+        }
     }
 
     @Override
@@ -159,6 +220,7 @@ public class FullGame extends Game {
                             uiopen = false;
                             ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
                             storeUI();
+                            renderFarm();
                         }
                     }
                 });

@@ -40,15 +40,6 @@ public class FullGame extends Game {
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         player.setEnergyStored(1000);
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
-//        player.getInventory().add(store.getInventory().get(1));
     }
 
     @Override
@@ -56,7 +47,7 @@ public class FullGame extends Game {
         super.update(pressedKeys);
         if(character != null) character.update(pressedKeys);
 
-        if (!uiopen) {
+        if (!uiopen && time < gameSpan) {
             if (pressedKeys.contains(KeyEvent.VK_UP)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y - 5));
             }

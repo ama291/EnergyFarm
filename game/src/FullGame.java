@@ -22,6 +22,7 @@ public class FullGame extends Game {
     Sprite marketSprite = new Sprite("Market", "market.png");
     Sprite bankSprite = new Sprite("Bank", "bank.png");
     JFrame ui;
+    boolean gameOver = false;
     boolean uiopen = false;
     String currency = "$";
     int elements = 0;
@@ -115,9 +116,10 @@ public class FullGame extends Game {
     @Override
     public void update(ArrayList<Integer> pressedKeys){
         super.update(pressedKeys);
+        gameOver = (time > gameSpan) || (player.getCapital() < 0);
         if(character != null) character.update(pressedKeys);
 
-        if (!uiopen && time < gameSpan) {
+        if (!uiopen && !gameOver) {
             if (pressedKeys.contains(KeyEvent.VK_UP)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y - 5));
             }
@@ -413,7 +415,7 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
-            if (time < gameSpan) {
+            if (!gameOver) {
                 g2d.drawString("*** Game Progress ***", 10,15);
             } else {
                 g2d.drawString("*** Game Over ***", 10,15);
@@ -427,7 +429,7 @@ public class FullGame extends Game {
     }
 
     public void advance() {
-        if (time < gameSpan) {
+        if (!gameOver) {
             for (Equipment e : player.getInventory()) {
                 //TODO randomize this
                 player.setEnergyStored(player.getEnergyStored() + e.getProductionLevel());

@@ -4,6 +4,9 @@ import engine.display.Sprite;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +29,7 @@ public class FullGame extends Game {
     boolean uiopen = false;
     String currency = "$";
     int elements = 0;
+    String mode;
 
     public FullGame(int gameLevel, double capital, int gameSpan) {
         super("EnergyFarm", 1000, 750);
@@ -118,6 +122,7 @@ public class FullGame extends Game {
     public void update(ArrayList<Integer> pressedKeys){
         super.update(pressedKeys);
         gameOver = (time > gameSpan) || (player.getCapital() < 0);
+
         if(character != null) character.update(pressedKeys);
 
         if (!uiopen && !gameOver) {
@@ -174,6 +179,16 @@ public class FullGame extends Game {
     }
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public void writeHiscore() {
+        try {
+            File f = new File("./resources/hiscores.txt");
+            BufferedWriter w = new BufferedWriter(new FileWriter(f));
+            String name = JOptionPane.showInputDialog("Please enter your name:");
+            w.write(mode + ":" + name + ":" + player.getCapital());
+        }
+        catch (Exception e) { return; }
     }
 
     public void bankUI() {
@@ -463,6 +478,9 @@ public class FullGame extends Game {
             market.calculateNextPrice();
             market.updatePrice();
             setTime(getTime() + 1);
+            if (time > gameSpan) {
+                writeHiscore();
+            }
         }
     }
 }

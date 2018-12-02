@@ -40,7 +40,7 @@ public class FullGame extends Game {
         store.generateInventory("solar");
         store.generateInventory("hydro");
         player = new Player(capital);
-        bank = new Bank(0.1, 5, gameSpan);
+        bank = new Bank(0.1, 5, gameSpan + 5 + 1);
         this.addChild(storeSprite);
         this.addChild(marketSprite);
         this.addChild(bankSprite);
@@ -190,7 +190,12 @@ public class FullGame extends Game {
             JLabel sorry = new JLabel("*** Bank only available in Expert difficulty ***");
             contentPane.add(new JLabel("\n"));
             contentPane.add(sorry);
-        } else {
+        } else if (gameSpan - time < bank.getMaturity()) {
+            JLabel sorry = new JLabel("*** Too close to maturity to borrow capital! ***");
+            contentPane.add(new JLabel("\n"));
+            contentPane.add(sorry);
+        }
+        else {
             JLabel capital = new JLabel("\t\t*** Your Capital:" + currency + player.getCapital() + " ***");
             JLabel title = new JLabel("\t\t*** Bank Loan Terms ***");
             JLabel terms = new JLabel("\t\tInterest Rate: " + 100*bank.getRate() + "%, Maturity: " + bank.getMaturity() + " years. Each bond is " + currency + "1000.");

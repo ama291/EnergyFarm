@@ -33,7 +33,8 @@ public class FullGame extends Game {
         level = gameLevel;
         this.gameSpan = gameSpan;
         market = new Market(50);
-        market.calculateCurrentPrice();
+        market.calculateNextPrice();
+        market.updatePrice();
         store = new Store();
         store.generateInventory("wind");
         store.generateInventory("solar");
@@ -394,6 +395,17 @@ public class FullGame extends Game {
             contentPane.add(mark);
             contentPane.add(energy);
             contentPane.add(price);
+            if (level == 1) {
+                market.calculateNextPrice();
+                double nextPrice = market.getNextPrice();
+                JLabel hint;
+                if (nextPrice > market.getCurrentPrice()) {
+                    hint = new JLabel("Hint: Price is trending up next year!");
+                } else {
+                    hint = new JLabel("Hint: Price is trending down next year!");
+                }
+                contentPane.add(hint);
+            }
             contentPane.add(quantity);
             quantity.setText("1");
             contentPane.add(sell);
@@ -443,7 +455,8 @@ public class FullGame extends Game {
             store.generateInventory("wind");
             store.generateInventory("solar");
             store.generateInventory("hydro");
-            market.calculateCurrentPrice();
+            market.calculateNextPrice();
+            market.updatePrice();
             setTime(getTime() + 1);
         }
     }

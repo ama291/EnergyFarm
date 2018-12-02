@@ -25,7 +25,7 @@ public class FullGame extends Game {
         time = 0;
         market = new Market(50);
         market.calculateCurrentPrice();
-        store = new Store(50, 50 ,50);
+        store = new Store(50000, 20000,200000);
         store.generateInventory("wind");
         store.generateInventory("solar");
         player = new Player(capital);
@@ -98,6 +98,8 @@ public class FullGame extends Game {
             JLabel inventories = new JLabel("*** Your Inventories ***");
             HashMap counts = player.getEquipmentCounts();
             JLabel equipmentCounts = new JLabel("Wind: " + counts.get("wind") + ", Solar: " + counts.get("solar") + ", Hydro: " + counts.get("hydro"));
+            JLabel myCapital = new JLabel("Capital: $" + player.getCapital());
+            contentPane.add(myCapital);
             contentPane.add(inventories);
             contentPane.add(equipmentCounts);
             contentPane.add(new JLabel("\n"));
@@ -105,7 +107,7 @@ public class FullGame extends Game {
             // Add Items for Sale
             for (Equipment i : store.getInventory()) {
                 JLabel title = new JLabel("*** Item for Sale ***");
-                JLabel name = new JLabel("Name: " + i.getName());
+                JLabel name = new JLabel("Type: " + i.getName());
                 JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
                 JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
                 JLabel productionlevel = new JLabel("Production Level: " + i.getProductionLevel() + " units");
@@ -113,10 +115,15 @@ public class FullGame extends Game {
                 buy.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        player.getInventory().add(i);
-                        uiopen = false;
-                        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
-                        storeUI();
+                        if (player.getCapital() < i.getPrice()) {
+                            popupMessage(ui,"\t\t*** SORRY: YOU CANNOT AFFORD THIS! ***");
+                        } else {
+                            player.getInventory().add(i);
+                            player.setCapital(player.getCapital() - i.getPrice());
+                            uiopen = false;
+                            ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                            storeUI();
+                        }
                     }
                 });
                 contentPane.add(title);
@@ -137,6 +144,27 @@ public class FullGame extends Game {
             });
             uiopen = true;
         }
+    }
+
+    public void popupMessage(JFrame ui, String message) {
+        ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+        JFrame newUi = new JFrame("Notification!");
+        newUi.setSize(300,200);
+        newUi.setResizable(false);
+        Container contentPane = newUi.getContentPane();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        JLabel msg = new JLabel(message);
+        contentPane.add(msg);
+        newUi.setLocationRelativeTo(null);
+        newUi.setVisible(true);
+        newUi.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                uiopen = false;
+                super.windowClosing(e);
+            }
+        });
+        this.ui = newUi;
     }
 
     public void inventoryUI() {
@@ -160,7 +188,7 @@ public class FullGame extends Game {
                 equipmentNumber++;
                 seperator = new JLabel("\n");
                 JLabel itemNumber = new JLabel("\t\t *** EQUIPMENT #" + equipmentNumber + " *** \t\t");
-                JLabel name = new JLabel("\t\tName: " + i.getName());
+                JLabel name = new JLabel("\t\tType: " + i.getName());
                 JLabel productionlevel = new JLabel("\t\tProduction Level: " + i.getProductionLevel() + " Joule(s)");
                 contentPane.add(seperator);
                 contentPane.add(itemNumber);

@@ -1,0 +1,2 @@
+Novice:Alex:1000000
+Intermediate:Alex:1200000

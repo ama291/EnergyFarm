@@ -9,7 +9,7 @@ public class Level2 extends FullGame {
         this.store.generateInventory("wind");
         this.store.generateInventory("solar");
         this.store.generateInventory("hydro");
-
+        this.mode = "Intermediate";
     }
 
 }

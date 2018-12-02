@@ -25,6 +25,7 @@ public class FullGame extends Game {
     boolean uiopen = false;
     String currency = "$";
     int elements = 0;
+    String mode;
 
     public FullGame(int gameLevel, double capital, int gameSpan) {
         super("EnergyFarm", 1000, 750);

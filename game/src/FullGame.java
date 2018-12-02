@@ -478,9 +478,16 @@ public class FullGame extends Game {
             market.calculateNextPrice();
             market.updatePrice();
             setTime(getTime() + 1);
-            if (time > gameSpan) {
-                writeHiscore();
+        } else {
+            double remainingDebt = bank.clearDebt();
+            if (remainingDebt != 0) {
+                player.setCapital(player.getCapital() - remainingDebt);
             }
+            double remainingEnergy = player.getEnergyStored();
+            double liquidatedEnergy = remainingEnergy * 35; // Salvage at $35
+            player.setCapital(player.getCapital() + liquidatedEnergy);
+            player.setEnergyStored(0);
+            writeHiscore();
         }
     }
 }

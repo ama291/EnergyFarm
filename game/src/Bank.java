@@ -50,4 +50,13 @@ public class Bank {
         return total;
     }
 
+    public double clearDebt() {
+        double total = 0;
+        for (int i = 0; i < debtPayments.length; i++) {
+            total += debtPayments[i];
+            debtPayments[i] = 0;
+        }
+        return total;
+    }
+
 }

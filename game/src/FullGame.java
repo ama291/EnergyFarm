@@ -481,6 +481,7 @@ public class FullGame extends Game {
     }
 
     public void advance() {
+        System.out.println("*** IN ADVANCE ***");
         if (!gameOver) {
             for (Equipment e : player.getInventory()) {
                 //TODO randomize this
@@ -498,7 +499,9 @@ public class FullGame extends Game {
             market.calculateNextPrice();
             market.updatePrice();
             setTime(getTime() + 1);
-        } else {
+        }
+        gameOver = (time > gameSpan) || (player.getCapital() < 0);
+        if (gameOver) {
             double remainingDebt = bank.clearDebt();
             if (remainingDebt != 0) {
                 player.setCapital(player.getCapital() - remainingDebt);

@@ -1,3 +1,7 @@
+import java.awt.event.WindowEvent;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Level3 extends FullGame {
 
     public Level3() {
@@ -10,6 +14,16 @@ public class Level3 extends FullGame {
         this.store.generateInventory("solar");
         this.store.generateInventory("hydro");
         this.mode = "Expert";
+
+        Timer timer = new Timer("Timer");
+        TimerTask updateTask = new TimerTask() {
+            @Override
+            public void run() {
+                ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                advance();
+            }
+        };
+        timer.scheduleAtFixedRate(updateTask, 60000, 60000);
     }
 
 }

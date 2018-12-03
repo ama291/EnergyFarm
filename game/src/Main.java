@@ -15,7 +15,10 @@ public class Main {
         menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menu.setResizable(false);
         Container contentPane = menu.getContentPane();
-        JLabel actualInstructions = new JLabel("<html> <p style=\"text-align: center;\"> *** Energy Farm ***<br><br><br> Energy Farm is a strategy game where you own a property designed to generate and sell energy in an environmentally friendly way, with the goal of maximizing profits. You start with $100,000 in initial capital and have the ability to buy equipment to produce energy. You can then sell the energy you produce on the market for the fair market price determined by the game’s current economy. Throughout time, your goal is to make profit-maximizing decisions in order to end up with the greatest amount of profit possible. <br><br><br>*** INSTRUCTIONS *** <br><br><br> Press I to view your current inventory. <br> Walk onto the store or the market, and press Enter to bring up the interface.<br> Press Space to advance time. <br> Select a button below to begin. <br><br><br><br></p></html>");
+        JLabel actualInstructions = new JLabel("<html> <p style=\"text-align: center;\"> *** Energy Farm ***<br><br><br> Energy Farm is a strategy game where you own a property designed to generate and sell energy in an environmentally friendly way, with the goal of maximizing profits. You start with $100,000 in initial capital and have the ability to buy equipment to produce energy. You can then sell the energy you produce on the market for the fair market price determined by the game’s current economy. Throughout time, your goal is to make profit-maximizing decisions in order to end up with the greatest amount of profit possible. <br><br><br>*** INSTRUCTIONS *** <br><br><br> Press I to view your current inventory. <br> Walk onto the store or the market, and press Enter to bring up the interface.<br> Press Space to advance time. <br> Select a button below to begin. <br><br> " +
+                "Novice: The length of the game is short. Each piece of equipment is around the same price but has a different energy production level, making it easy to determine which is the better value. When selling energy on the market, the price at the next time period is predetermined, and the interface provides the player a hint of the price trend.<br>" +
+                "Intermediate: The length of the game is long and the difference in equipment efficiency given varying prices is not so obvious. This level introduces a timer, where the player has a limited amount of time between each decision. The player now has to balance analysis and decision making with allowing enough time to physically perform the desired actions. Once the timer expires, time will progress one year. (the time per move is adjustable for players with (dis)abilities). <br>" +
+                "Expert: The player now can borrow capital to enter into a leveraged position, and can repay the amount borrowed at each time period according to a specified interest rate. Machines also have an added maintenance cost. These two mechanics introduce the idea of expenses, and the player loses the game if bankrupt. Additionally, there is a news alert each time period that can change the specifications of each piece of equipment.<br><br></p></html>");
         actualInstructions.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Create Levels
         JButton l1Button  = new JButton("Novice");
@@ -73,8 +76,6 @@ public class Main {
         JLabel separator = new JLabel("\n");
         JLabel scoresLabel = new JLabel("*** Hiscores ***");
         scoresLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        contentPane.add(separator);
-        separator = new JLabel("\n");
         contentPane.add(separator);
         separator = new JLabel("\n");
         contentPane.add(separator);

@@ -168,6 +168,9 @@ public class FullGame extends Game {
                 }
                 advance();
             }
+            if (character.getPosition().y < 500) {
+                character.setPosition(new Point(character.getPosition().x, 500));
+            }
         }
 
     }

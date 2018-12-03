@@ -481,7 +481,6 @@ public class FullGame extends Game {
     }
 
     public void advance() {
-        System.out.println("*** IN ADVANCE ***");
         if (!gameOver) {
             for (Equipment e : player.getInventory()) {
                 //TODO randomize this

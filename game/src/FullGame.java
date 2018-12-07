@@ -51,6 +51,8 @@ public class FullGame extends Game {
         renderFarm();
         this.addChild(character);
         character.setPosition(new Point(460, 400));
+        character.setScaleX(1.5);
+        character.setScaleY(1.5);
         storeSprite.setPosition(new Point(0, 540));
         marketSprite.setPosition(new Point(785, 540));
         bankSprite.setPosition(new Point(375, 568));

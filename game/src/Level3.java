@@ -4,6 +4,8 @@ import java.util.TimerTask;
 
 public class Level3 extends FullGame {
 
+    Timer timer;
+
     public Level3() {
         super(3,1000, 60);
         this.store.setPrice(50000, 40000,300000);
@@ -15,15 +17,27 @@ public class Level3 extends FullGame {
         this.store.generateInventory("hydro");
         this.mode = "Expert";
 
-        Timer timer = new Timer("Timer");
+        startTimer();
+    }
+
+    @Override
+    public void advance() {
+        super.advance();
+        timer.cancel();
+        startTimer();
+    }
+
+    public void startTimer() {
+        timer = new Timer("Timer");
         TimerTask updateTask = new TimerTask() {
             @Override
             public void run() {
-                ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                if (ui != null) {
+                    ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                }
                 advance();
             }
         };
         timer.scheduleAtFixedRate(updateTask, 60000, 60000);
     }
-
 }

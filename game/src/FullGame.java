@@ -17,6 +17,7 @@ public class FullGame extends Game {
     int time;
     int gameSpan;
     int level;
+    int timeDelay = 60000;
     Market market;
     Store store;
     Player player;
@@ -170,6 +171,15 @@ public class FullGame extends Game {
                 }
                 inventoryUI();
             }
+            if (pressedKeys.contains(KeyEvent.VK_S)) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                settingsUI();
+            }
+
             if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(300);
@@ -303,7 +313,7 @@ public class FullGame extends Game {
             JLabel inventories = new JLabel("*** Your Inventories ***");
             HashMap counts = player.getEquipmentCounts();
             JLabel equipmentCounts = new JLabel("Wind: " + counts.get("wind") + ", Solar: " + counts.get("solar") + ", Hydro: " + counts.get("hydro"));
-            JLabel myCapital = new JLabel("Capital: $" + String.format("%.2f", player.getCapital()));
+            JLabel myCapital = new JLabel("Capital: " + currency + String.format("%.2f", player.getCapital()));
             contentPane.add(inventories);
             contentPane.add(myCapital);
             contentPane.add(equipmentCounts);
@@ -313,8 +323,8 @@ public class FullGame extends Game {
             for (Equipment i : store.getInventory()) {
                 JLabel title = new JLabel("*** Item for Sale ***");
                 JLabel name = new JLabel("Type: " + i.getName());
-                JLabel price = new JLabel("Price: $" + String.format("%.2f", i.getPrice()));
-                JLabel installfee = new JLabel("Install Fee: $" + i.getInstallFee());
+                JLabel price = new JLabel("Price: " + currency + String.format("%.2f", i.getPrice()));
+                JLabel installfee = new JLabel("Install Fee: " + currency + i.getInstallFee());
                 JLabel productionlevel = new JLabel("Average Annual Production: " + String.format("%.2f", i.getProductionLevel()) + " kJ");
                 JLabel productionstd = new JLabel("Annual Production STDDEV: " + String.format("%.2f", i.getProductionStd() * 100) + "%");
                 JTextField quantity = new JTextField("\t");
@@ -355,6 +365,7 @@ public class FullGame extends Game {
                 quantity.setText("1");
                 contentPane.add(buy);
             }
+
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
             ui.addWindowListener(new WindowAdapter() {
@@ -365,6 +376,8 @@ public class FullGame extends Game {
                 }
             });
             uiopen = true;
+
+
         }
     }
 
@@ -382,7 +395,7 @@ public class FullGame extends Game {
             JLabel separator = new JLabel("\n");
             // Add Player Resources
             JLabel summary = new JLabel("\t\t*** SUMMARY ***");
-            JLabel capital = new JLabel("\t\tCurrent Capital: $" + String.format("%.2f", player.getCapital()));
+            JLabel capital = new JLabel("\t\tCurrent Capital: " + currency + String.format("%.2f", player.getCapital()));
             contentPane.add(summary);
             contentPane.add(capital);
             // Add Equipments
@@ -409,6 +422,57 @@ public class FullGame extends Game {
             });
             uiopen = true;
         }
+    }
+
+    public void settingsUI() {
+        this.ui = new JFrame("Settings");
+        ui.setSize(500,500);
+        ui.setResizable(false);
+        Container contentPane = new Container();
+        JScrollPane scrollPane = new JScrollPane(contentPane);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        ui.add(scrollPane);
+        JLabel curr = new JLabel("*** Currency: ***");
+        JTextField currencyQ = new JTextField("$");
+        currencyQ.setMaximumSize(currencyQ.getPreferredSize());
+        JLabel country = new JLabel("*** Country: Coming Soon! ***");
+        JLabel timer = new JLabel("*** Timer (in Seconds): ***");
+        JTextField timerQ = new JTextField("60");
+        timerQ.setMaximumSize(timerQ.getPreferredSize());
+        JButton update = new JButton("Update");
+        update.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cQ;
+                int tQ = 0;
+                try {
+                    cQ = currencyQ.getText();
+                    tQ = Integer.parseInt(timerQ.getText());
+                    currency = cQ;
+                    timeDelay = tQ * 1000;
+                }
+                catch (Exception x) { }
+            }
+        });
+
+        contentPane.add(curr);
+        contentPane.add(currencyQ);
+        contentPane.add(country);
+        if (level == 2) {
+            contentPane.add(timer);
+            contentPane.add(timerQ);
+        }
+        contentPane.add(update);
+        ui.setLocationRelativeTo(null);
+        ui.setVisible(true);
+        ui.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                uiopen = false;
+                super.windowClosing(e);
+            }
+        });
+        uiopen = true;
     }
 
     public void marketUI() {
@@ -480,6 +544,7 @@ public class FullGame extends Game {
         super.draw(g);
         Graphics2D g2d = (Graphics2D) g;
         if (player != null) {
+            // Draw Game Progress
             if (!gameOver) {
                 g2d.drawString("*** Game Progress ***", 10,15);
             } else {

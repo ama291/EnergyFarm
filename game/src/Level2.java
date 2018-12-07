@@ -38,6 +38,6 @@ public class Level2 extends FullGame {
                 advance();
             }
         };
-        timer.scheduleAtFixedRate(updateTask, 60000, 60000);
+        timer.scheduleAtFixedRate(updateTask, this.timeDelay, this.timeDelay);
     }
 }

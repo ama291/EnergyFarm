@@ -1,3 +1,4 @@
+import engine.display.AnimatedSprite;
 import engine.display.Game;
 import engine.display.Sprite;
 
@@ -20,7 +21,7 @@ public class FullGame extends Game {
     Store store;
     Player player;
     Bank bank;
-    Sprite character = new Sprite("Character", "player.png");
+    AnimatedSprite character = new AnimatedSprite("Character");
     Sprite storeSprite = new Sprite("Store", "store.jpg");
     Sprite marketSprite = new Sprite("Market", "market.png");
     Sprite bankSprite = new Sprite("Bank", "bank.png");
@@ -126,15 +127,22 @@ public class FullGame extends Game {
         if (!uiopen && !gameOver) {
             if (pressedKeys.contains(KeyEvent.VK_UP)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y - 5));
-            }
-            if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                character.setCurrentId("runUp");
+                character.setPlaying(true);
+            } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                 character.setPosition(new Point(character.getPosition().x - 5, character.getPosition().y));
-            }
-            if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                character.setCurrentId("runLeft");
+                character.setPlaying(true);
+            } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                 character.setPosition(new Point(character.getPosition().x + 5, character.getPosition().y));
-            }
-            if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                character.setCurrentId("runRight");
+                character.setPlaying(true);
+            } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                 character.setPosition(new Point(character.getPosition().x, character.getPosition().y + 5));
+                character.setCurrentId("runDown");
+                character.setPlaying(true);
+            } else if (character != null && character.getPlaying()) {
+                character.stopAnimation();
             }
             if (pressedKeys.contains(KeyEvent.VK_ENTER)) {
                 try {

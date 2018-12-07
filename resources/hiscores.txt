@@ -2,3 +2,4 @@ Novice:Player:27578.34
 Novice:Player:19441.59
 Novice:Alex:396891.43
 Novice:Alex:374244.69
+Intermediate:Player:1000000.00

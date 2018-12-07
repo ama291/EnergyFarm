@@ -286,6 +286,16 @@ public class FullGame extends Game {
             contentPane.add(quantity);
             contentPane.add(borrow);
         }
+        JLabel space = new JLabel("\n");
+        JButton close = new JButton("Close");
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        contentPane.add(space);
+        contentPane.add(close);
         // Publish UI
         ui.setLocationRelativeTo(null);
         ui.setVisible(true);
@@ -365,7 +375,16 @@ public class FullGame extends Game {
                 quantity.setText("1");
                 contentPane.add(buy);
             }
-
+            JLabel space = new JLabel("\n");
+            JButton close = new JButton("Close");
+            close.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+            contentPane.add(space);
+            contentPane.add(close);
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
             ui.addWindowListener(new WindowAdapter() {
@@ -411,6 +430,16 @@ public class FullGame extends Game {
                 contentPane.add(name);
                 contentPane.add(productionlevel);
             }
+            JLabel space = new JLabel("\n");
+            JButton close = new JButton("Close");
+            close.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+            contentPane.add(space);
+            contentPane.add(close);
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
             ui.addWindowListener(new WindowAdapter() {
@@ -433,12 +462,14 @@ public class FullGame extends Game {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         ui.add(scrollPane);
         JLabel curr = new JLabel("*** Currency: ***");
-        JTextField currencyQ = new JTextField("$");
+        JTextField currencyQ = new JTextField("$$$$$");
         currencyQ.setMaximumSize(currencyQ.getPreferredSize());
+        currencyQ.setText("$");
         JLabel country = new JLabel("*** Country: Coming Soon! ***");
         JLabel timer = new JLabel("*** Timer (in Seconds): ***");
-        JTextField timerQ = new JTextField("60");
+        JTextField timerQ = new JTextField("60000");
         timerQ.setMaximumSize(timerQ.getPreferredSize());
+        timerQ.setText("60");
         JButton update = new JButton("Update");
         update.addActionListener(new ActionListener() {
             @Override
@@ -463,6 +494,16 @@ public class FullGame extends Game {
             contentPane.add(timerQ);
         }
         contentPane.add(update);
+        JLabel space = new JLabel("\n");
+        JButton close = new JButton("Close");
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        contentPane.add(space);
+        contentPane.add(close);
         ui.setLocationRelativeTo(null);
         ui.setVisible(true);
         ui.addWindowListener(new WindowAdapter() {
@@ -526,6 +567,16 @@ public class FullGame extends Game {
             contentPane.add(quantity);
             quantity.setText("1");
             contentPane.add(sell);
+            JLabel space = new JLabel("\n");
+            JButton close = new JButton("Close");
+            close.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    ui.dispatchEvent(new WindowEvent(ui, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+            contentPane.add(space);
+            contentPane.add(close);
             ui.setLocationRelativeTo(null);
             ui.setVisible(true);
             ui.addWindowListener(new WindowAdapter() {
